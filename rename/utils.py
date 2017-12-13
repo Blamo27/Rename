@@ -18,17 +18,22 @@ class Util:
         for files in self.rules.getObject('extension'):
             self.files.append(glob.glob(os.path.join(self.path, files)));
 
+    def arrayToString(self, array):
+        return ''.join(map(str, array));
+
     def initLetter(self, current):
         """
         Return init letter (only letters, no path)
         """
+        # Alphabet A-Z
+        alphabet = [chr(i) for i in range(ord('A'), ord('Z') + 1)];
         array = []; # result
 
         # Exception, need alphabet
         if (current.isalpha() == False): return None;
 
-        # Convert String to array
-        current = list(current);
+        # Convert String to array & upper letters
+        current = list(current.upper());
 
         for i in range(len(self.files)):
             # Check the last letter (int) 25 => "Z"
@@ -37,13 +42,13 @@ class Util:
             # ["A", "Z"] => ["A", "A", "A"]
             # ["A", "B"] => ["A", "C"]
             if (lastIndex < 25):
-                current[len(current) - 1] = alphabet[lastIndex + 1]
+                current[len(current) - 1] = alphabet[lastIndex + 1];
             else:
                 current[len(current) - 1] = "A";
                 current += ["A"];
 
             # Add the result to the array
-            array.append(arrayToString(current))
+            array.append(self.arrayToString(current));
 
         return array;
 
