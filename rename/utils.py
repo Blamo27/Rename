@@ -1,5 +1,6 @@
 from glob import glob;
 from os import path;
+from os.path import basename;
 
 class Util:
     def __init__(self, path, rule, debug = False):
@@ -15,13 +16,29 @@ class Util:
         """
         Insert concerned files into [] => self.files
         """
-        for files in self.rules.getObject('extension'):
+        self.files = []; # empty the array
+        for files in self.getRule('extension'):
             self.files.append(glob.glob(os.path.join(self.path, files)));
 
     def arrayToString(self, array):
+        """
+        Convert array to string
+        """
         return ''.join(map(str, array));
 
-    def initLetter(self, current):
+    def getRule(self, option):
+        """
+        Get current rule (for a given option)
+        """
+        return self.getRule(option);
+
+    def init(self):
+        """
+        Get the init depending on the current rule
+        """
+        return (self.initNumber(), self.initLetter())[self.getRule('init') == 'letter'];
+
+    def initLetter(self):
         """
         Return init letter (only letters, no path)
         """
@@ -34,12 +51,13 @@ class Util:
             return None;
 
         # Convert String to array & upper letters
-        current = list(current.upper());
+        current = list(self.getRule('beginwith').upper());
 
         for i in range(len(self.files)):
             # Check the last letter (int) 25 => "Z"
             lastIndex = alphabet.index(current[len(current) - 1]);
 
+            # Exception first letter
             o = (1, 0)[i == 0];
 
             # ["A", "Z"] => ["A", "A", "A"]
@@ -55,20 +73,44 @@ class Util:
 
         return array;
 
-    def initNumber(self, number):
+    def initNumber(self):
         """
         Return init numbers
         """
-        return True;
+        index = int(self.getRule('beginwith'));
+        length = index + len(self.files);
 
-    def prefix(self, prefix):
-        """
-        Préfixe
-        """
-        return True;
+        if (length > 999): return None;
 
-    def suffix(self, suffix):
+        return ["{0:03}".format(i) for i in range(index, length)];
+
+    def prefix(self):
         """
-        Postefixe
+        Return prefix for each file
         """
-        return True;
+        return self.getRule('prefix');
+
+    def suffix(self):
+        """
+        Return suffix for each file
+        """
+        return self.getRule('sufix');
+
+    def arrayEdit(self):
+        """
+        Return an array containing selected rules
+        """
+        # append concerned files into the "self.files" array
+        self.selectedExt();
+
+        # result
+        final = [];
+
+        init   = self.init();       # init (number | letters)
+        prefix = self.prefix();     # prefix
+        suffix = self.suffix();     # suffix
+
+        for i in range(len(self.files)):
+            filename = basename(self.files)[0]);
+            extension = "." + basename(self.files).split(".")[1]);
+            final.append(init[i] + prefix + filename + suffix + extension);
