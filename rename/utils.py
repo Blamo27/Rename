@@ -30,7 +30,8 @@ class Util:
         array = []; # result
 
         # Exception, need alphabet
-        if (current.isalpha() == False): return None;
+        if (type(current).__name__ != "str" or current.isalpha() == False):
+            return None;
 
         # Convert String to array & upper letters
         current = list(current.upper());
@@ -39,10 +40,12 @@ class Util:
             # Check the last letter (int) 25 => "Z"
             lastIndex = alphabet.index(current[len(current) - 1]);
 
+            o = (1, 0)[i == 0];
+
             # ["A", "Z"] => ["A", "A", "A"]
             # ["A", "B"] => ["A", "C"]
             if (lastIndex < 25):
-                current[len(current) - 1] = alphabet[lastIndex + 1];
+                current[len(current) - 1] = alphabet[lastIndex + o];
             else:
                 current[len(current) - 1] = "A";
                 current += ["A"];
@@ -54,7 +57,7 @@ class Util:
 
     def initNumber(self, number):
         """
-        Amorce chiffre
+        Return init numbers
         """
         return True;
 
