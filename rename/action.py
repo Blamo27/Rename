@@ -16,7 +16,7 @@ class Action:
         Insert concerned files into [] => self.files
         """
         self.files = []; # empty the array
-        print(self.path);
+
         for filename in os.listdir(self.path):
 
             if (self.getRule('extension') == None):

@@ -100,6 +100,8 @@ class RenameInterface:
         prefix = self.get('prefix').get();
         suffix = self.get('suffix').get();
 
+        extension = [x.strip() for x in extension.split(',')];
+
         if (beginwith == ""): beginwith = ("001", "A")[init == "letter"];
 
         # Rule & Util
