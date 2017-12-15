@@ -3,11 +3,10 @@ import os;
 from os.path import basename;
 
 class Action:
-    def __init__(self, path, rule, debug = False):
+    def __init__(self, path, rule):
         self.path = path;
         self.rule = rule;
         self.files = []; # by default all files
-        self.debug = debug;
 
     def setPath(self, newpath):
         self.path = newpath;
@@ -17,6 +16,7 @@ class Action:
         Insert concerned files into [] => self.files
         """
         self.files = []; # empty the array
+        print(self.path);
         for filename in os.listdir(self.path):
 
             if (self.getRule('extension') == None):
@@ -44,7 +44,8 @@ class Action:
         Get the init depending on the current rule
         """
         if (self.getRule('init') == None): return None;
-        return (self.initNumber(), self.initLetter())[self.getRule('init') == 'letter'];
+        if (self.getRule('init') == 'letter'): return self.initLetter();
+        if (self.getRule('init') == 'chiffre'): return self.initNumber();
 
     def initLetter(self):
         """
@@ -54,12 +55,16 @@ class Action:
         alphabet = [chr(i) for i in range(ord('A'), ord('Z') + 1)];
         array = []; # result
 
+        current = self.getRule('beginwith').upper();
+
+        print(current)
+
         # Exception, need alphabet
         if (type(current).__name__ != "str" or current.isalpha() == False):
-            return None;
+            current = "A";
 
         # Convert String to array & upper letters
-        current = list(self.getRule('beginwith').upper());
+        current = list(current);
 
         for i in range(len(self.files)):
             # Check the last letter (int) 25 => "Z"
@@ -111,14 +116,8 @@ class Action:
         # append concerned files into the "self.files" array
         self.selectedExt();
 
-        # simulation
-        table  = [];
-        header = ["Fichier original", "Renommé"];
-
         # result
         final = [];
-
-        print(self.files);
 
         init   = self.init();       # init (number | letters)
         prefix = self.prefix();     # prefix
@@ -128,8 +127,9 @@ class Action:
             fileInfo = os.path.splitext(self.files[i]);
             filename = fileInfo[0];
             extension = fileInfo[1];
+
             ini = "" if (init == None) else init[i];
-            print(ini + prefix + filename + suffix + extension);
-            final.append("" + ini + prefix + filename + suffix + extension);
+
+            final.append([self.files[i], ini + prefix + filename + suffix + extension]);
 
         return final;
