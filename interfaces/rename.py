@@ -1,41 +1,96 @@
 from tkinter import *;
-from rename.utils import *;
+from rules.rule import Rule;
+from rename.action import Action;
+from utils.browser import Browser;
 
-def __init__(self, app):
-    self.app = app;
-    self.init = None;
-    self.beginwith = None;
-    self.prefix = None;
-    self.suffix = None;
-    self.extension = None;
+class RenameInterface:
 
-def tkTemp(self):
-    root = Tk();
-    root.title(self.app);
+    def __init__(self, app):
+        self.app = app;
+        self.params = {
+            'init': None,
+            'beginwith': None,
+            'prefix': None,
+            'suffix': None,
+            'extension': None,
+            'dirname': None
+        };
 
-    List = Button(root, text="Lister").grid(row = 0, column = 0, stick = W);
-    CreateButton = Button(root, text="Créer").grid(row = 1, column = 0, stick = W);
+    def tkTemp(self):
+        root = Tk();
+        root.title(self.app);
 
-    Label(root, text = "Nom du répertoire").grid(row = 2, column = 1);
-    Entry(root).grid(row = 2, column = 2, stick = W);
+        self.set('init', StringVar());
+        self.set('dirname', StringVar());
+        self.set('prefix', StringVar());
+        self.set('suffix', StringVar());
+        self.set('beginwith', StringVar());
+        self.set('extension', StringVar());
 
-    Label(root, text = "Amorce").grid(row = 4, column = 0, stick = W);
-    Button(root, text = "Aucune", command = lambda : self.init = None).grid(row = 5, column = 0, stick = W);
-    Button(root, text = "Lettre", command = lambda : self.init = "letter").grid(row = 6, column = 0, stick = W);
-    Button(root, text = "Chiffre", command = lambda : self.init = "chiffre").grid(row = 6, column = 0, stick = W);
+        # List | Create
+        Button(root, text="Lister").grid(row = 0, column = 0, stick = W);
+        Button(root, text="Créer").grid(row = 1, column = 0, stick = W);
 
-    Label(root, text = "A partir de").grid(row = 8, column = 0, stick = W);
-    start = Entry(root).grid(row = 9, column = 0,stick = W);
+        # Directory name
+        Label(root, text = "Nom du répertoire").grid(row = 2, column = 1);
+        Entry(root, textvariable = self.get('dirname')).grid(row = 2, column = 2, stick = W);
+        Button(root, text = "Choisir un chemin", command = lambda: self.setPath()).grid(row = 2, column = 3, stick = W);
 
-    Label(root, text = "Préfixe").grid(row = 4, column = 1);
-    prefix = Entry(root).grid(row = 5, column = 1);
+        # Init
+        Label(root, text = "Amorce").grid(row = 4, column = 0, stick = W);
+        Button(root, text = "Aucune", command = lambda: self.set('init', None)).grid(row = 5, column = 0, stick = W);
+        Button(root, text = "Lettre", command = lambda: self.set('init', 'letter')).grid(row = 6, column = 0, stick = W);
+        Button(root, text = "Chiffre", command = lambda: self.set('init', 'chiffre')).grid(row = 7, column = 0, stick = W);
 
-    originalname = Checkbutton(root, text="Nom original").grid(row=5, column=2);
+        # Begin with
+        Label(root, text = "A partir de").grid(row = 8, column = 0, stick = W);
+        start = Entry(root).grid(row = 9, column = 0,stick = W);
 
-    Label(root, text = "Postfixe").grid(row = 4, column = 3);
-    post = Entry(root).grid(row = 5, column = 3);
+        # Prefix
+        Label(root, text = "Préfixe").grid(row = 4, column = 1);
+        prefix = Entry(root, textvariable = self.get('prefix')).grid(row = 5, column = 1);
 
-    Label(root, text = "Extension concernée").grid(row = 4; column = 4);
-    self.extension = Entry(root).grid(row = 5, column = 4);
+        # Suffix
+        Label(root, text = "Postfixe").grid(row = 4, column = 2);
+        suffix = Entry(root, textvariable = self.get('suffix')).grid(row = 5, column = 2);
 
-    # RULE & UTILS 
+        # Concerned extension(s)
+        Label(root, text = "Extension concernée").grid(row = 4, column = 3);
+        self.extension = Entry(root).grid(row = 5, column = 3);
+
+        # Rename button
+        Rename = Button(root, text = "Renommer", command = lambda : self.rename()).grid(row = 7, column = 3);
+        root.mainloop();
+
+    def setPath(self):
+        """
+        Define current path with Browser (utils)
+        """
+        file = Browser();
+        self.get('dirname').set(file.get());
+
+    def set(self, option, value):
+        """
+        Set a value (object)
+        """
+        self.params[option] = value;
+
+    def get(self, option):
+        """
+        Get a value (object)
+        """
+        return self.params[option];
+
+    def rename(self):
+
+        init = (self.get('init').get(), None)[self.get('init').get() == ""];
+        extension = (self.get('extension').get(), None)[self.get('extension').get() == ""];
+
+        # Rule & Util
+        rule = Rule(init, self.get('beginwith').get(), self.get('prefix').get(),
+                    'test', self.get('suffix').get(), extension);
+
+        util = Action(self.get('dirname').get(), rule);
+
+        # Simulation
+        util.arrayEdit();

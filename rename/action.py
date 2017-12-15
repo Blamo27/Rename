@@ -1,13 +1,13 @@
 from glob import glob;
-from os import path;
+import os;
 from os.path import basename;
 
-class Util:
+class Action:
     def __init__(self, path, rule, debug = False):
         self.path = path;
         self.rule = rule;
-        self.debug = debug;
         self.files = []; # by default all files
+        self.debug = debug;
 
     def setPath(self, newpath):
         self.path = newpath;
@@ -17,8 +17,15 @@ class Util:
         Insert concerned files into [] => self.files
         """
         self.files = []; # empty the array
-        for files in self.getRule('extension'):
-            self.files.append(glob.glob(os.path.join(self.path, files)));
+        for filename in os.listdir(self.path):
+
+            if (self.getRule('extension') == None):
+                self.files.append(filename);
+                continue;
+
+            for extension in self.getRule('extension'):
+                if filename.endswith(extension):
+                    self.files.append(filename);
 
     def arrayToString(self, array):
         """
@@ -30,13 +37,13 @@ class Util:
         """
         Get current rule (for a given option)
         """
-        return self.getRule(option);
+        return self.rule.getObject(option);
 
     def init(self):
         """
         Get the init depending on the current rule
         """
-        if (self.getRule('init')) == None): return "";
+        if (self.getRule('init') == None): return None;
         return (self.initNumber(), self.initLetter())[self.getRule('init') == 'letter'];
 
     def initLetter(self):
@@ -89,13 +96,13 @@ class Util:
         """
         Return prefix for each file
         """
-        return self.getRule('prefix');
+        return ("", self.getRule('prefix'))[self.getRule('prefix') != None];
 
     def suffix(self):
         """
         Return suffix for each file
         """
-        return self.getRule('sufix');
+        return ("", self.getRule('suffix'))[self.getRule('suffix') != None];
 
     def arrayEdit(self):
         """
@@ -104,14 +111,25 @@ class Util:
         # append concerned files into the "self.files" array
         self.selectedExt();
 
+        # simulation
+        table  = [];
+        header = ["Fichier original", "Renommé"];
+
         # result
         final = [];
+
+        print(self.files);
 
         init   = self.init();       # init (number | letters)
         prefix = self.prefix();     # prefix
         suffix = self.suffix();     # suffix
 
         for i in range(len(self.files)):
-            filename = basename(self.files)[0]);
-            extension = "." + basename(self.files).split(".")[1]);
-            final.append(init[i] + prefix + filename + suffix + extension);
+            fileInfo = os.path.splitext(self.files[i]);
+            filename = fileInfo[0];
+            extension = fileInfo[1];
+            ini = "" if (init == None) else init[i];
+            print(ini + prefix + filename + suffix + extension);
+            final.append("" + ini + prefix + filename + suffix + extension);
+
+        return final;
