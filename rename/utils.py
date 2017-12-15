@@ -36,6 +36,7 @@ class Util:
         """
         Get the init depending on the current rule
         """
+        if (self.getRule('init')) == None): return "";
         return (self.initNumber(), self.initLetter())[self.getRule('init') == 'letter'];
 
     def initLetter(self):
