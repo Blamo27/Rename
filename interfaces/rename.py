@@ -95,12 +95,10 @@ class RenameInterface:
 
     def rename(self):
         init = (self.get('init').get(), None)[self.get('init').get() == ""];
-        extension = (self.get('extension').get(), None)[self.get('extension').get() == ""];
+        extension = ([x.strip() for x in self.get('extension').get().split(',')], None)[self.get('extension').get() == ""];
         beginwith = self.get('beginwith').get();
         prefix = self.get('prefix').get();
         suffix = self.get('suffix').get();
-
-        extension = [x.strip() for x in extension.split(',')];
 
         if (beginwith == ""): beginwith = ("001", "A")[init == "letter"];
 
