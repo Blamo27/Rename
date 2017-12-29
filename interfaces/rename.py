@@ -1,7 +1,10 @@
 from tkinter import *;
 from rules.rule import Rule;
+
 from rename.apply import Apply;
 from rename.action import Action;
+
+from utils.animatedgif import *;
 from utils.browser import Browser;
 from utils.tabulate import tabulate;
 
@@ -21,6 +24,7 @@ class RenameInterface:
 
     def tkTemp(self):
         root = Tk();
+        root.geometry("870x230+300+300");
         root.title(self.app);
 
         self.set('init', StringVar());
@@ -63,6 +67,11 @@ class RenameInterface:
 
         # Rename button
         Button(root, text = "Renommer", command = lambda : self.rename()).grid(row = 7, column = 3);
+
+        # Create canvas (1 hour stabilization)
+        gif = AnimatedGif(root, 'ezgif.com-optimize.gif', 0.05);
+        gif.place(x = 500, y = 0);
+        gif.start();
 
         # Checkbox simulate
         Checkbutton(root, text="Simuler", command = lambda: self.simulate()).grid(row = 9, column = 3);
