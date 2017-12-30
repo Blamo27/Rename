@@ -13,8 +13,7 @@ class RulesList:
     def load(self):
         with open("saves/renamer.ini", "r") as load:
             try:
-                read = literal_eval(load.read());
-                return read;
+                return literal_eval(load.read());
             except SyntaxError:
                 return {};
 
@@ -22,7 +21,6 @@ class RulesList:
         rules = self.load();
         name = self.getRule().getObject('rulename');
         rules[name] = self.getRule().getAll();
-        print(rules);
         with open("saves/renamer.ini", "w") as s:
             s.write(str(rules));
 

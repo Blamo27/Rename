@@ -126,7 +126,7 @@ class RenameInterface:
         Open the save interface
         """
         rule = Rule(self.params['init'].get(), self.params['beginwith'].get(),
-                    self.params['prefix'].get(), self.params['dirname'],
+                    self.params['prefix'].get(), self.params['dirname'].get(),
                     self.params['suffix'].get(), self.params['extension'].get(),
                     self.params['original'].get());
 
