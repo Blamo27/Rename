@@ -1,7 +1,10 @@
 """
-Interface module
+Name: Rename
 
-Add Tkinter interfaces
+Description: File renamer with a
+compressed and optimized GIF /!\
+
+Author: Dr_Blamo (Blamo27)
 """
 from interfaces.rename import RenameInterface;
 

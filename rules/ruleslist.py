@@ -1,4 +1,3 @@
-from rule import Rule;
 from ast import literal_eval;
 
 class RulesList:
@@ -11,19 +10,25 @@ class RulesList:
     def setRule(self, newrule):
         self.rule = newrule;
 
-    def get(self):
-        with open("saves/renamer.ini", "r") as get:
-            return literal_eval(get.read());
+    def empty(self):
+        with open("saves/renamer.ini", "w") as e:
+            e.write("{}");
 
     def load(self):
         with open("saves/renamer.ini", "r") as load:
-            return literal_eval(load.read());
+            try:
+                read = literal_eval(load.read());
+                return read;
+            except SyntaxError:
+                return {};
 
     def save(self):
-        obj = self.get();
-        obj[self.getRule().getObject('filename')] = self.getRule();
-        with open("saves/renamer.ini", "w") as save:
-            save.write(obj);
+        rules = self.load();
+        name = self.getRule().getObject('rulename');
+        rules[name] = self.getRule().getAll();
+        print(rules);
+        with open("saves/renamer.ini", "w") as s:
+            s.write(str(rules));
 
     def __str__(self):
         return "Règle actuelle {}".format(self.getRule());
