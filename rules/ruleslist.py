@@ -10,10 +10,6 @@ class RulesList:
     def setRule(self, newrule):
         self.rule = newrule;
 
-    def empty(self):
-        with open("saves/renamer.ini", "w") as e:
-            e.write("{}");
-
     def load(self):
         with open("saves/renamer.ini", "r") as load:
             try:
