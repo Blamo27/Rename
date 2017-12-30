@@ -23,7 +23,8 @@ class RenameInterface:
             'suffix': None,
             'extension': None,
             'dirname': None,
-            'rulename': None
+            'rulename': None,
+            'original': None,
         };
 
     def tkTemp(self):
@@ -39,6 +40,7 @@ class RenameInterface:
         self.set('beginwith', StringVar());
         self.set('extension', StringVar());
         self.set('rulename', StringVar());
+        self.set('original', StringVar());
 
         # List | Create
         Button(root, text="Lister", command = lambda: self.load()).grid(row = 0, column = 0, stick = W);
@@ -70,6 +72,10 @@ class RenameInterface:
         # Concerned extension(s)
         Label(root, text = "Extension concernée").grid(row = 4, column = 3);
         Entry(root, textvariable = self.get('extension')).grid(row = 5, column = 3);
+
+        # New name
+        Label(root, text = "Nouveau nom").grid(row = 6, column = 2);
+        Entry(root, textvariable = self.get('original')).grid(row = 7, column = 2);
 
         # Rename button
         Button(root, text = "Renommer", command = lambda : self.rename()).grid(row = 7, column = 3);
@@ -120,8 +126,9 @@ class RenameInterface:
         Open the save interface
         """
         rule = Rule(self.params['init'].get(), self.params['beginwith'].get(),
-                    self.params['prefix'].get(), '', self.params['suffix'].get(),
-                    self.params['extension'].get());
+                    self.params['prefix'].get(), self.params['dirname'],
+                    self.params['suffix'].get(), self.params['extension'].get(),
+                    self.params['original'].get());
 
         save = SaveInterface(rule);
         save.tkSave();
@@ -133,11 +140,13 @@ class RenameInterface:
         beginwith = self.get('beginwith').get();
         prefix = self.get('prefix').get();
         suffix = self.get('suffix').get();
+        original = self.get('original').get();
+        dirname = self.get('dirname').get();
 
         if (beginwith == ""): beginwith = ("001", "A")[init == "letter"];
 
         # Rule & Util
-        rule = Rule(init, beginwith, prefix, 'test', suffix, extension);
+        rule = Rule(init, beginwith, prefix, dirname, suffix, extension, original);
 
 
         if (self.simulation):

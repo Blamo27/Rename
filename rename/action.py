@@ -123,12 +123,16 @@ class Action:
         prefix = self.prefix();     # prefix
         suffix = self.suffix();     # suffix
 
+        # edit original name
+        original = self.getRule('original');
+
         for i in range(len(self.files)):
             fileInfo = os.path.splitext(self.files[i]);
             filename = fileInfo[0];
             extension = fileInfo[1];
 
             ini = "" if (init == None) else init[i];
+            if (original and init): filename = original;
 
             final.append([self.files[i], ini + prefix + filename + suffix + extension]);
 
