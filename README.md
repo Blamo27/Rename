@@ -12,8 +12,8 @@ School project, we had to create a software able to rename files
 - [x] Rename file (real)
 
 ### To-do (lazy)
-- [ ] Rename original name
-- [ ] DocTest ... :rofl:
+- [x] Rename original name ![#c5f015](https://placehold.it/15/c5f015/000000?text=+) `finished`
+- [ ] DocTest ... :rofl: ![#f03c15](https://placehold.it/15/f03c15/000000?text=+) `too busy for that`
 
 ### Main menu
 
